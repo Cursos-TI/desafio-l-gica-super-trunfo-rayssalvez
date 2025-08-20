@@ -108,23 +108,84 @@ int main() {
         pib_per_capita_carta2 = 0.0f;
     }
 
-    // Comparação de Cartas:
-    // Desenvolva a lógica de comparação entre duas cartas.
-    // Utilize estruturas de decisão como if, if-else para comparar atributos como população, área, PIB, etc.
+    // Preparar valores para comparação.
+    double val1 = 0.0, val2 = 0.0;
+    const char *nome_atributo = "desconhecido";
 
-    // Exemplo:
-     if (quantidade_carta1 > quantidade_carta2) {
-         printf("Cidade 1 tem maior população.\n");
-    } else {
-        printf("Cidade 2 tem maior população.\n");
+    switch (atributo_escolhido) {
+        case POPULACAO:
+            nome_atributo = "população";
+            val1 = (double)quantidade_carta1;
+            val2 = (double)quantidade_carta2;
+            break;
+        case AREA:
+            nome_atributo = "área (km2)";
+            val1 = area_carta1;
+            val2 = area_carta2;
+            break;
+        case PIB:
+            nome_atributo = "pib (bilhões)";
+            val1 = pib_carta1;
+            val2 = pib_carta2;
+            break;
+        case DENSIDADE:
+            nome_atributo = "densidade populacional (hab/km2)";
+            val1 = densidade_populacional_carta1;
+            val2 = densidade_populacional_carta2;
+            break;
+        case PIB_PER_CAPITA:
+            nome_atributo = "pib per capita (moeda/unidade)";
+            val1 = pib_per_capita_carta1;
+            val2 = pib_per_capita_carta2;
+            break;
+        default:
+            printf("atributo inválido.\n");
+            return 1;
     }
 
-    // Exibição dos Resultados:
-    // Após realizar as comparações, exiba os resultados para o usuário.
-    // Certifique-se de que o sistema mostre claramente qual carta venceu e com base em qual atributo.
+    // Comparar: para densidade, menor vence; para os outros, maior vence.
+    int resultado = 0; // 1 = carta1 vence, 2 = carta2 vence, 0 = empate
+    if (atributo_escolhido == DENSIDADE) {
+        if (val1 < val2) resultado = 1;
+        else if (val2 < val1) resultado = 2;
+        else resultado = 0;
+    } else {
+        if (val1 > val2) resultado = 1;
+        else if (val2 > val1) resultado = 2;
+        else resultado = 0;
+    }
 
-    // Exemplo:
-    // printf("A cidade vencedora é: %s\n", cidadeVencedora);
+    // Exibir resultado no formato pedido.
+    printf("\ncomparação de cartas (atributo: %s)\n\n", nome_atributo);
+
+    if (atributo_escolhido == POPULACAO) {
+        char buf1[64], buf2[64];
+        format_ulong_with_dots(quantidade_carta1, buf1);
+        format_ulong_with_dots(quantidade_carta2, buf2);
+        printf("carta 1 - %s (%s): %s\n", nome_cidade_carta1, codigo_carta1, buf1);
+        printf("carta 2 - %s (%s): %s\n", nome_cidade_carta2, codigo_carta2, buf2);
+    } else if (atributo_escolhido == PIB) {
+        printf("carta 1 - %s (%s): %.2f (bilhões)\n", nome_cidade_carta1, codigo_carta1, pib_carta1);
+        printf("carta 2 - %s (%s): %.2f (bilhões)\n", nome_cidade_carta2, codigo_carta2, pib_carta2);
+    } else if (atributo_escolhido == AREA) {
+        printf("carta 1 - %s (%s): %.2f km2\n", nome_cidade_carta1, codigo_carta1, area_carta1);
+        printf("carta 2 - %s (%s): %.2f km2\n", nome_cidade_carta2, codigo_carta2, area_carta2);
+    } else if (atributo_escolhido == DENSIDADE) {
+        printf("carta 1 - %s (%s): %.2f hab/km2\n", nome_cidade_carta1, codigo_carta1, densidade_populacional_carta1);
+        printf("carta 2 - %s (%s): %.2f hab/km2\n", nome_cidade_carta2, codigo_carta2, densidade_populacional_carta2);
+    } else if (atributo_escolhido == PIB_PER_CAPITA) {
+        printf("carta 1 - %s (%s): %.2f\n", nome_cidade_carta1, codigo_carta1, pib_per_capita_carta1);
+        printf("carta 2 - %s (%s): %.2f\n", nome_cidade_carta2, codigo_carta2, pib_per_capita_carta2);
+    }
+
+    // Mensagem final.
+    if (resultado == 1) {
+        printf("resultado: carta 1 (%s) venceu!\n", nome_cidade_carta1);
+    } else if (resultado == 2) {
+        printf("resultado: carta 2 (%s) venceu!\n", nome_cidade_carta2);
+    } else {
+        printf("resultado: empate!\n");
+    }
 
     return 0;
 }
